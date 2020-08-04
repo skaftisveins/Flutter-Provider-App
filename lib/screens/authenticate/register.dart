@@ -3,16 +3,16 @@ import 'package:flutter_firebase_app/services/auth.dart';
 import 'package:flutter_firebase_app/shared/constants.dart';
 import 'package:flutter_firebase_app/shared/loading.dart';
 
-class SignIn extends StatefulWidget {
+class Register extends StatefulWidget {
   final Function toggleView;
 
-  SignIn({this.toggleView});
+  Register({this.toggleView});
 
   @override
-  _SignInState createState() => _SignInState();
+  _RegisterState createState() => _RegisterState();
 }
 
-class _SignInState extends State<SignIn> {
+class _RegisterState extends State<Register> {
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
   bool loading = false;
@@ -31,7 +31,7 @@ class _SignInState extends State<SignIn> {
             appBar: AppBar(
               backgroundColor: Colors.purple[400],
               elevation: 0.0,
-              title: Text('Sign In'),
+              title: Text('Register'),
               actions: <Widget>[
                 FlatButton.icon(
                   onPressed: () {
@@ -42,7 +42,7 @@ class _SignInState extends State<SignIn> {
                     color: Colors.white,
                   ),
                   label: Text(
-                    'Register',
+                    'Sign In',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
@@ -53,10 +53,9 @@ class _SignInState extends State<SignIn> {
               child: Form(
                 key: _formKey,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      'Log in',
+                      'Register with a new account',
                       style: TextStyle(fontSize: 20),
                     ),
                     SizedBox(
@@ -65,8 +64,7 @@ class _SignInState extends State<SignIn> {
                     TextFormField(
                       decoration:
                           textInputDecoration.copyWith(hintText: 'Email'),
-                      validator: (val) =>
-                          val.isEmpty ? 'Please provide an email' : null,
+                      validator: (val) => val.isEmpty ? 'Enter an email' : null,
                       onChanged: (val) {
                         setState(() => email = val);
                       },
@@ -78,7 +76,7 @@ class _SignInState extends State<SignIn> {
                       decoration:
                           textInputDecoration.copyWith(hintText: 'Password'),
                       validator: (val) => val.length < 6
-                          ? 'Password must be 6 character or longer'
+                          ? 'Password must be 6 characters or longer'
                           : null,
                       onChanged: (val) {
                         setState(() => password = val);
@@ -95,10 +93,10 @@ class _SignInState extends State<SignIn> {
                             loading = true;
                           });
                           dynamic result = await _auth
-                              .signInWithEmailAndPassword(email, password);
+                              .registerWithEmailAndPassword(email, password);
                           if (result == null) {
                             setState(() {
-                              error = 'Password or username incorrect';
+                              error = 'Please supply a valid email';
                               loading = false;
                             });
                           }
@@ -106,10 +104,17 @@ class _SignInState extends State<SignIn> {
                       },
                       color: Colors.pink[400],
                       child: Text(
-                        'Sign in',
+                        'Register',
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
+                    SizedBox(
+                      height: 12.0,
+                    ),
+                    Text(
+                      error,
+                      style: TextStyle(color: Colors.red, fontSize: 14),
+                    )
                   ],
                 ),
               ),
